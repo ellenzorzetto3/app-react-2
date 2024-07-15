@@ -4,11 +4,9 @@ import axios from "axios";
 export default function Weather(props) {
   const [temperature, setTemperature] = useState(null);
 
-  
-    function handleApiResponse(response) {
-      setTemperature(response.data.main.temp);
-    }
- 
+  function handleApiResponse(response) {
+    setTemperature(response.data.main.temp);
+  }
 
   const apiKey = "5f472b7acba333cd8a035ea85a0d4d4c";
   const units = "metric";
@@ -18,13 +16,9 @@ export default function Weather(props) {
 
   return (
     <div>
-      {temperature ? (
-        <p>
-          The temperature in {props.city} is {temperature}°C
-        </p>
-      ) : (
-        <p>Loading...</p>
-      )}
+      <p>
+        The temperature in {props.city} is {Math.round(temperature)}°C
+      </p>
     </div>
   );
 }
