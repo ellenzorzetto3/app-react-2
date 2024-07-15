@@ -4,11 +4,11 @@ import axios from "axios";
 export default function Weather(props) {
   const [temperature, setTemperature] = useState(null);
 
-  function useEffect() {
+  
     function handleApiResponse(response) {
       setTemperature(response.data.main.temp);
     }
-  }
+ 
 
   const apiKey = "5f472b7acba333cd8a035ea85a0d4d4c";
   const units = "metric";
