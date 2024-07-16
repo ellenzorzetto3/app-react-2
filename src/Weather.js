@@ -1,24 +1,60 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./Weather.css";
 
-export default function Weather(props) {
-  const [temperature, setTemperature] = useState(null);
+export default function Form() {
+  const [city, setCity] = useState(" ");
+  const [loaded, setLoaded] = useState(false);
+  const [weather, setWeather] = useState(" ");
 
-  function handleApiResponse(response) {
-    setTemperature(response.data.main.temp);
+  function displayWeather(response) {
+    setLoaded(true);
+    setWeather({
+      Description: response.data.weather[0].description,
+      Temperature: Math.round(response.data.main.temp),
+      Wind: Math.round(response.data.wind.speed),
+      Humidity: Math.round(response.data.main.humidity),
+      icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
+    });
+  }
+  function handleSubmit(event) {
+    event.preventDefault();
+    let apiKey = "5f472b7acba333cd8a035ea85a0d4d4c";
+    let units = "metric";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${units}`;
+
+    axios.get(apiUrl).then(displayWeather);
   }
 
-  const apiKey = "5f472b7acba333cd8a035ea85a0d4d4c";
-  const units = "metric";
-  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${props.city}&appid=${apiKey}&units=${units}`;
+  function queryCity(event) {
+    setCity(event.target.value);
+  }
 
-  axios.get(apiUrl).then(handleApiResponse);
-
-  return (
-    <div>
-      <p>
-        The temperature in {props.city} is {Math.round(temperature)}°C
-      </p>
+  let form = (
+    <div className="Form">
+      <form onSubmit={handleSubmit}>
+        <input type="text" onChange={queryCity} />
+        <input type="submit" value="Search" />
+      </form>
     </div>
   );
+  if (loaded) {
+    return (
+      <div>
+        {form}
+        <br />
+        <ul>
+          <li>{weather.Description}</li>
+          <li>Temperature: {weather.Temperature}ºC</li>
+          <li>Wind: {weather.Wind} km/h</li>
+          <li>Humidity: {weather.Humidity}%</li>
+          <li>
+            <img src={weather.icon} alt="Weather Icon" />
+          </li>
+        </ul>
+      </div>
+    );
+  } else {
+    return form;
+  }
 }
